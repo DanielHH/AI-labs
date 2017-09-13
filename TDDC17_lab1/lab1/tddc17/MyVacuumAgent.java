@@ -164,32 +164,7 @@ class MyAgentProgram implements AgentProgram {
 	Boolean home = (Boolean)p.getAttribute("home");
 	System.out.println("percept: " + p);
 
-	if (home && left_home) {
-	    return NoOpAction.NO_OP;
-	}
-	else if (safety_walk) {
-	    if (bump) {
-		switch (state.agent_direction) {
-		    case MyAgentState.NORTH:
-		    case MyAgentState.EAST:
-			return turnLeft();
-		    case MyAgentState.SOUTH:
-		    case MyAgentState.WEST:
-			return turnRight();
-		}
-	    } else {
-		left_home = true;
-		return walkForward();
-	    }
-	} else if (home && south_east_visited) {
-	    safety_walk = true;
-	    if(state.agent_direction == state.NORTH) {
-		return turnRight();
-	    }
-	    else if(state.agent_direction == state.WEST) {
-		return turnLeft();
-	    }
-	}
+
 
 	// State update based on the percept value and the last action
 	state.updatePosition((DynamicPercept)percept);
@@ -216,6 +191,38 @@ class MyAgentProgram implements AgentProgram {
 
 	state.printWorldDebug();
 
+
+	if (home && left_home) {
+	    return NoOpAction.NO_OP;
+	}
+	else if (safety_walk) {
+	    if (dirt) {
+		System.out.println("DIRT -> choosing SUCK action!");
+		state.agent_last_action=state.ACTION_SUCK;
+		return LIUVacuumEnvironment.ACTION_SUCK;
+	    }
+	    else if (bump) {
+		switch (state.agent_direction) {
+		    case MyAgentState.NORTH:
+		    case MyAgentState.EAST:
+			return turnLeft();
+		    case MyAgentState.SOUTH:
+		    case MyAgentState.WEST:
+			return turnRight();
+		}
+	    } else {
+		left_home = true;
+		return walkForward();
+	    }
+	} else if (home && south_east_visited) {
+	    safety_walk = true;
+	    if(state.agent_direction == state.NORTH) {
+		return turnRight();
+	    }
+	    else if(state.agent_direction == state.WEST) {
+		return turnLeft();
+	    }
+	}
 
 	// Next action selection based on the percept value
 	if (dirt)
