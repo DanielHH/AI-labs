@@ -10,6 +10,7 @@ import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -103,8 +104,9 @@ class MyAgentProgram implements AgentProgram {
 	// Here you can define your variables!
 	// public int iterationCounter = 10;
 	public MyAgentState state = new MyAgentState();
-	private Queue<Entry<Integer, Integer>> nodesToExplore = new ArrayDeque<>();
-	private List<Entry<Entry<Integer, Integer>, List<Entry<Integer, Integer>>>> node_parents_list = new ArrayList<>();
+    	private boolean start_up = true;
+	private Queue<int[]> nodesToExplore = new ArrayDeque<>();
+	private List<Entry<int[], List<int[]>>> node_parents_list = new ArrayList<>();
 
 	// moves the Agent to a random start position
 	// uses percepts to update the Agent position - only the position, other
@@ -142,12 +144,6 @@ class MyAgentProgram implements AgentProgram {
 			System.out
 					.println("Processing percepts after the last execution of moveToRandomStartPosition()");
 			state.agent_last_action = state.ACTION_SUCK;
-
-			// add startNode to queue
-			Map.Entry<Integer, Integer> startNode = new AbstractMap.SimpleEntry<>(
-					state.agent_x_position, state.agent_y_position);
-			nodesToExplore.add(startNode);
-
 			return LIUVacuumEnvironment.ACTION_SUCK;
 		}
 
@@ -213,51 +209,52 @@ class MyAgentProgram implements AgentProgram {
 			state.agent_last_action = state.ACTION_SUCK;
 			return LIUVacuumEnvironment.ACTION_SUCK;
 		}
+	    	if (start_up) {
+		    // add startNode to queue
+		    int[] startNode = { state.agent_x_position, state.agent_y_position };
+		    nodesToExplore.add(startNode);
+		    List<int[]> start_node_parents = new ArrayList<>();
+		    node_parents_list.add(new AbstractMap.SimpleEntry<>(startNode, start_node_parents));
+		    start_up = false;
+		}
 		System.out.println("before queue check");
 		if (!nodesToExplore.isEmpty()) {
-			Entry<Integer, Integer> targetNode = nodesToExplore.peek();
-			if (!targetNode.equals(new SimpleEntry<>(state.agent_x_position, state.agent_y_position))) {
-				return goToTargetNode(targetNode, node_parents_list);
+			int[] targetNode = nodesToExplore.peek();
+			if (!Arrays.equals(targetNode, new int[]{state.agent_x_position, state.agent_y_position})) {
+			    return goToTargetNode(targetNode, node_parents_list);
 			}
 			nodesToExplore.remove();
-			node_parents_list.remove(0);
-			addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position);
 			System.out.println("after target node removal");
-			if (!nodesToExplore.contains(new SimpleEntry<>(
-					state.agent_x_position, state.agent_y_position - 1)) && state.world[state.agent_x_position][state.agent_y_position - 1] == state.UNKNOWN) { // Add
-																			// northnode
+			if (!nodesToExplore.contains(new int[]{state.agent_x_position, state.agent_y_position - 1}) &&
+			    state.world[state.agent_x_position][state.agent_y_position - 1] == state.UNKNOWN) { // Add northnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);
 			}
-			if (!nodesToExplore.contains(new SimpleEntry<>(
-					state.agent_x_position + 1, state.agent_y_position))) { // Add
-																			// eastnode
+			if (!nodesToExplore.contains(new int[]{state.agent_x_position + 1, state.agent_y_position}) &&
+						    state.world[state.agent_x_position + 1][state.agent_y_position] == state.UNKNOWN) { // Add eastnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position);
 			}
-			if (!nodesToExplore.contains(new SimpleEntry<>(
-					state.agent_x_position, state.agent_y_position + 1))) { // Add
-																			// southnode
+			if (!nodesToExplore.contains(new int[]{state.agent_x_position, state.agent_y_position + 1}) &&
+						    state.world[state.agent_x_position][state.agent_y_position + 1] == state.UNKNOWN) { // Add southnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1);
 			}
-			if (!nodesToExplore.contains(new SimpleEntry<>(
-					state.agent_x_position - 1, state.agent_y_position))) { // Add
-																			// westnode
+			if (!nodesToExplore.contains(new int[]{state.agent_x_position - 1, state.agent_y_position}) &&
+						    state.world[state.agent_x_position - 1][state.agent_y_position] == state.UNKNOWN) { // Add westnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position - 1, state.agent_y_position);
 			}
 			System.out.println("after neighbor to queue add");
 			return goToTargetNode(nodesToExplore.peek(), node_parents_list);
-			
 		} else {
 			// goHome();
 			return NoOpAction.NO_OP;
 		}
 	}
 	
-	private void addUnexploredNeighbourToNodesToExplore(Entry<Integer, Integer> targetNode, int x, int y) {
+	private void addUnexploredNeighbourToNodesToExplore(int[] parentNode, int x, int y) {
 		System.out.println("added node x:" + x + ", y: " + y);
-		Map.Entry<Integer, Integer> nodeToVisit = new AbstractMap.SimpleEntry<>(x, y);
+		int[] nodeToVisit = {x, y};
 		nodesToExplore.add(nodeToVisit);			
-		List<Entry<Integer, Integer>> parents_nodes = new ArrayList<>(getParentNodes(targetNode));
-		parents_nodes.add(nodeToVisit);
+		List<int[]> parents_nodes = new ArrayList<>(getParentNodes(parentNode));
+		parents_nodes.add(parentNode);
 		node_parents_list.add(new AbstractMap.SimpleEntry<>(nodeToVisit, parents_nodes));
 	}
 
@@ -280,46 +277,64 @@ class MyAgentProgram implements AgentProgram {
 		return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 	}
 	
-	private Action goToTargetNode(Entry<Integer, Integer> targetNode, List<Entry<Entry<Integer, Integer>, List<Entry<Integer, Integer>>>> node_parents_list) {
-		List<Entry<Integer, Integer>> target_node_parents = getParentNodes(targetNode);
-		List<Entry<Integer, Integer>> current_node_parents = getParentNodes(new SimpleEntry<>(state.agent_x_position, state.agent_y_position));
-		Entry<Integer, Integer> nextNode;
-		if (target_node_parents == null) {
-			return walkForward();
+	private Action goToTargetNode(int[] targetNode, List<Entry<int[], List<int[]>>> node_parents_list) {
+	    	System.out.println("gototargetnode, target: " + targetNode[0] + ", " + targetNode[1]);
+		List<int[]> target_node_parents = getParentNodes(targetNode);
+	    	int[] currentNode = {state.agent_x_position, state.agent_y_position};
+		List<int[]> current_node_parents = getParentNodes(currentNode);
+		int[] nextNode;
+	    System.out.println("target node parents size: " + target_node_parents.size());
+	    System.out.println(target_node_parents.get(0)[0] + ", " + target_node_parents.get(0)[1]);
+	    System.out.println("current node parents size: " + current_node_parents.size());
+	    System.out.println("current node: " + currentNode[0] + ", " + currentNode[1]);
+	    	boolean subSet = false;
+	    	if (current_node_parents.size() < target_node_parents.size()) {
+		    // kolla om äkta delmängd
+		    subSet = true;
+		    for (int i = 0; i<current_node_parents.size(); i++) {
+			if (!Arrays.equals(current_node_parents.get(i), target_node_parents.get(i))) {
+			    subSet = false;
+			    break;
+			}
+		    }
 		}
-		if (target_node_parents.containsAll(current_node_parents)) {
-			nextNode = target_node_parents.get(current_node_parents.size());
+	    	if (subSet && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) {
+		    	nextNode = target_node_parents.get(current_node_parents.size());
+		} else if (Arrays.equals(target_node_parents.get(0), currentNode))  {
+		    	nextNode = targetNode;
 		} else {
-			nextNode = current_node_parents.get(current_node_parents.size()-1);
+		    	nextNode = current_node_parents.get(current_node_parents.size()-1);
 		}
-		Entry<Integer, Integer> nodeInFront = null;
+	    System.out.println("next node: " + nextNode[0] + ", " + nextNode[1]);
+		int[] nodeInFront = null;
 		switch (state.agent_direction) {
-		case MyAgentState.NORTH:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position, state.agent_y_position-1);
-			break;
-		case MyAgentState.EAST:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position+1, state.agent_y_position);
-			break;
-		case MyAgentState.SOUTH:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position, state.agent_y_position+1);
-			break;
-		case MyAgentState.WEST:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position-1, state.agent_y_position);
-			break;
+		    case MyAgentState.NORTH:
+			    nodeInFront = new int[]{state.agent_x_position, state.agent_y_position-1};
+			    break;
+		    case MyAgentState.EAST:
+			    nodeInFront = new int[]{state.agent_x_position+1, state.agent_y_position};
+			    break;
+		    case MyAgentState.SOUTH:
+			    nodeInFront = new int[]{state.agent_x_position, state.agent_y_position+1};
+			    break;
+		    case MyAgentState.WEST:
+			    nodeInFront = new int[]{state.agent_x_position-1, state.agent_y_position};
+			    break;
 		}
-		if (nodeInFront == targetNode) {
+		if (Arrays.equals(nodeInFront, nextNode)) {
 			return walkForward();
 		} else {
 			return turnRight();
 		}
 	}
 	
-	private List<Entry<Integer, Integer>> getParentNodes(Entry<Integer, Integer> node) {
-		List<Entry<Integer, Integer>> result = null;
+	private List<int[]> getParentNodes(int[] node) {
+		List<int[]> result = null;
 		for (int i = 0; i< node_parents_list.size(); i++) {
-			if (node_parents_list.get(i).getKey() == node) {
-				result = node_parents_list.get(i).getValue();
-			}
+		    if (Arrays.equals(node_parents_list.get(i).getKey(), node)) {
+			    result = node_parents_list.get(i).getValue();
+				break;
+		    }
 		}
 		return result;
 	} 
