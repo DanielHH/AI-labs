@@ -203,62 +203,65 @@ class MyAgentProgram implements AgentProgram {
 		state.printWorldDebug();
 
 		// main rotation loop starts here!
-		// Next action selection based on the percept value
 		if (bump) {
 			nodesToExplore.remove();
 		}
-		
-		if (dirt) {
-			System.out.println("DIRT -> choosing SUCK action!");
-			state.agent_last_action = state.ACTION_SUCK;
-			return LIUVacuumEnvironment.ACTION_SUCK;
-		}
-		System.out.println("before queue check");
+
 		if (!nodesToExplore.isEmpty()) {
 			Entry<Integer, Integer> targetNode = nodesToExplore.peek();
-			if (!targetNode.equals(new SimpleEntry<>(state.agent_x_position, state.agent_y_position))) {
-				return goToTargetNode(targetNode, node_parents_list);
+			if (targetNode != new SimpleEntry<>(state.agent_x_position,
+					state.agent_y_position)) {
+				return goToTargetNode(targetNode, node_parent_list);
 			}
 			nodesToExplore.remove();
 			node_parents_list.remove(0);
-			addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position);
-			System.out.println("after target node removal");
+
 			if (!nodesToExplore.contains(new SimpleEntry<>(
-					state.agent_x_position, state.agent_y_position - 1)) && state.world[state.agent_x_position][state.agent_y_position - 1] == state.UNKNOWN) { // Add
+					state.agent_x_position, state.agent_y_position - 1))) { // Add
 																			// northnode
-				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);
+				Map.Entry<Integer, Integer> nodeToVisit = new AbstractMap.SimpleEntry<>(
+						state.agent_x_position, state.agent_y_position - 1);
+				nodesToExplore.add(nodeToVisit);
 			}
 			if (!nodesToExplore.contains(new SimpleEntry<>(
 					state.agent_x_position + 1, state.agent_y_position))) { // Add
 																			// eastnode
-				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position);
+				Map.Entry<Integer, Integer> nodeToVisit = new AbstractMap.SimpleEntry<>(
+						state.agent_x_position, state.agent_y_position - 1);
+				nodesToExplore.add(nodeToVisit);
 			}
 			if (!nodesToExplore.contains(new SimpleEntry<>(
 					state.agent_x_position, state.agent_y_position + 1))) { // Add
 																			// southnode
-				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1);
+				Map.Entry<Integer, Integer> nodeToVisit = new AbstractMap.SimpleEntry<>(
+						state.agent_x_position, state.agent_y_position - 1);
+				nodesToExplore.add(nodeToVisit);
 			}
 			if (!nodesToExplore.contains(new SimpleEntry<>(
 					state.agent_x_position - 1, state.agent_y_position))) { // Add
 																			// westnode
-				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position - 1, state.agent_y_position);
+				Map.Entry<Integer, Integer> nodeToVisit = new AbstractMap.SimpleEntry<>(
+						state.agent_x_position, state.agent_y_position - 1);
+				nodesToExplore.add(nodeToVisit);
 			}
-			System.out.println("after neighbor to queue add");
-			return goToTargetNode(nodesToExplore.peek(), node_parents_list);
-			
 		} else {
 			// goHome();
-			return NoOpAction.NO_OP;
 		}
-	}
-	
-	private void addUnexploredNeighbourToNodesToExplore(Entry<Integer, Integer> targetNode, int x, int y) {
-		System.out.println("added node x:" + x + ", y: " + y);
-		Map.Entry<Integer, Integer> nodeToVisit = new AbstractMap.SimpleEntry<>(x, y);
-		nodesToExplore.add(nodeToVisit);			
-		List<Entry<Integer, Integer>> parents_nodes = new ArrayList<>(getParentNodes(targetNode));
-		parents_nodes.add(nodeToVisit);
-		node_parents_list.add(new AbstractMap.SimpleEntry<>(nodeToVisit, parents_nodes));
+
+		// Next action selection based on the percept value
+		if (dirt) {
+			System.out.println("DIRT -> choosing SUCK action!");
+			state.agent_last_action = state.ACTION_SUCK;
+			return LIUVacuumEnvironment.ACTION_SUCK;
+		} else {
+			if (bump) {
+				state.agent_last_action = state.ACTION_NONE;
+				return NoOpAction.NO_OP;
+			} else {
+				state.agent_last_action = state.ACTION_MOVE_FORWARD;
+				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+			}
+		}
 	}
 
 	private Action turnRight() {
@@ -281,48 +284,9 @@ class MyAgentProgram implements AgentProgram {
 	}
 	
 	private Action goToTargetNode(Entry<Integer, Integer> targetNode, List<Entry<Entry<Integer, Integer>, List<Entry<Integer, Integer>>>> node_parents_list) {
-		List<Entry<Integer, Integer>> target_node_parents = getParentNodes(targetNode);
-		List<Entry<Integer, Integer>> current_node_parents = getParentNodes(new SimpleEntry<>(state.agent_x_position, state.agent_y_position));
-		Entry<Integer, Integer> nextNode;
-		if (target_node_parents == null) {
-			return walkForward();
-		}
-		if (target_node_parents.containsAll(current_node_parents)) {
-			nextNode = target_node_parents.get(current_node_parents.size());
-		} else {
-			nextNode = current_node_parents.get(current_node_parents.size()-1);
-		}
-		Entry<Integer, Integer> nodeInFront = null;
-		switch (state.agent_direction) {
-		case MyAgentState.NORTH:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position, state.agent_y_position-1);
-			break;
-		case MyAgentState.EAST:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position+1, state.agent_y_position);
-			break;
-		case MyAgentState.SOUTH:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position, state.agent_y_position+1);
-			break;
-		case MyAgentState.WEST:
-			nodeInFront = new SimpleEntry<>(state.agent_x_position-1, state.agent_y_position);
-			break;
-		}
-		if (nodeInFront == targetNode) {
-			return walkForward();
-		} else {
-			return turnRight();
-		}
+		List<Entry<Integer, Integer>> parent_nodes = node_parents_list.get(0).getValue();
+		
 	}
-	
-	private List<Entry<Integer, Integer>> getParentNodes(Entry<Integer, Integer> node) {
-		List<Entry<Integer, Integer>> result = null;
-		for (int i = 0; i< node_parents_list.size(); i++) {
-			if (node_parents_list.get(i).getKey() == node) {
-				result = node_parents_list.get(i).getValue();
-			}
-		}
-		return result;
-	} 
 }
 
 public class MyVacuumAgent extends AbstractAgent {

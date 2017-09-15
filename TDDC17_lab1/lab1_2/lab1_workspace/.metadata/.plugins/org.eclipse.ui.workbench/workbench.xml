@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workbench progressCount="24" version="2.0">
 <workbenchAdvisor/>
-<window height="1018" maximized="true" width="1920" x="-144" y="0">
+<window height="1016" maximized="true" width="1914" x="-246" y="24">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -38,12 +38,15 @@
 </editorArea>
 <editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MyVacuumAgent.java" partName="MyVacuumAgent.java" path="/home/danhe178/TDDC17/TDDC17_lab1/lab1_2/lab1_workspace/project/tddc17/MyVacuumAgent.java" title="MyVacuumAgent.java" tooltip="project/tddc17/MyVacuumAgent.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/project/tddc17/MyVacuumAgent.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6581" selectionTopPixel="2849"/>
+<editorState selectionHorizontalPixel="0" selectionLength="17" selectionOffset="6499" selectionTopPixel="3468"/>
 </editor>
 </editors>
 <views>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
+<expanded>
+<category IMemento.internal.id="Warnings"/>
+</expanded>
 <columnWidths org.eclipse.ui.ide.locationField="53" org.eclipse.ui.ide.markerType="1157" org.eclipse.ui.ide.pathField="103" org.eclipse.ui.ide.resourceField="78" org.eclipse.ui.ide.severityAndDescriptionField="457"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
@@ -124,8 +127,8 @@
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info part="org.eclipse.gef.ui.palette_view" ratio="0.123624936" ratioLeft="236" ratioRight="1673" relationship="2" relative="topLeft"/>
-<info folder="true" part="bottomRight" ratio="0.65891474" ratioLeft="425" ratioRight="220" relationship="4" relative="org.eclipse.gef.ui.palette_view">
+<info part="org.eclipse.gef.ui.palette_view" ratio="0.11838659" ratioLeft="226" ratioRight="1683" relationship="2" relative="topLeft"/>
+<info folder="true" part="bottomRight" ratio="0.7687296" ratioLeft="708" ratioRight="213" relationship="4" relative="org.eclipse.gef.ui.palette_view">
 <folder activePageID="org.eclipse.ui.views.ProblemView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.views.TaskList" label="LabelNotFound"/>
@@ -216,8 +219,50 @@
 <item historyLabel="MyVacuumAgent.java" index="0">
 <position info="not_deleted" x="6436" y="0"/>
 </item>
-<item active="true" historyLabel="MyVacuumAgent.java" index="0">
+<item historyLabel="MyVacuumAgent.java" index="0">
 <position info="not_deleted" x="6593" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="6553" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="6273" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="8840" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="2826" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="2867" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="6527" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="9170" y="0"/>
+</item>
+<item historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="9170" y="0"/>
+</item>
+<item active="true" historyLabel="MyVacuumAgent.java" index="0">
+<position info="not_deleted" x="9131" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
