@@ -258,10 +258,10 @@ class MyAgentProgram implements AgentProgram {
 		} 
 		//at the targetnode. Add surrounding nodes to the stack of nodes to explore.
 		nodesToExplore.pop();
-		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position); // Add eastnode
-		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1); // Add southnode
 		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);	// Add northnode
 		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position - 1, state.agent_y_position); // Add westnode
+		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1); // Add southnode
+		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position); // Add eastnode
 		if (!nodesToExplore.empty()) {
 			return goToTargetNode(nodesToExplore.peek());
 		}
@@ -300,13 +300,11 @@ class MyAgentProgram implements AgentProgram {
 	    if (checkIfNeighbour(currentNode, targetNode))  { // target is a neighbournode
 	    	nextNode = targetNode;
 	    }
-	    /*else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) { 
-	    	System.out.println("goToTargetNode: ssssssssssssssssssssssssssssssssssss");
+	    else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) { // follow the targets trail of nodes
 		    	nextNode = target_node_parents.get(current_node_parents.size());
-		}*/ else if (subset && current_node_parents.size() == 0) { // at start-position
+		} else if (subset && current_node_parents.size() == 0) { // at start-position
 				    nextNode = target_node_parents.get(1);
-		} else if (subset) { // follow the target's trail of nodes
-			System.out.println("goToTargetNode: subset");
+		} else if (subset) {
 		    nextNode = target_node_parents.get(current_node_parents.size()+1);
 		}
 		else { // going back to start-position

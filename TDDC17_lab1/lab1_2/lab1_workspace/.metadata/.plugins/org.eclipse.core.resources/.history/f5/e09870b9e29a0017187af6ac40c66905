@@ -214,8 +214,8 @@ class MyAgentProgram implements AgentProgram {
 		    // add startNode to stack
 		    int[] startNode = { state.agent_x_position, state.agent_y_position };
 		    nodesToExplore.add(startNode);
-		    List<int[]> start_node_parents = new ArrayList<>(); //path of nodes from startnode to a certain targetnode
-		    node_parents_list.add(new AbstractMap.SimpleEntry<>(startNode, start_node_parents)); 
+		    List<int[]> start_node_parents = new ArrayList<>();
+		    node_parents_list.add(new AbstractMap.SimpleEntry<>(startNode, start_node_parents));
 		    start_up = false;
 		}
 	    	
@@ -247,66 +247,62 @@ class MyAgentProgram implements AgentProgram {
 		return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 	}
 	
-	/**
-	 * If stack is not empty, function runs a Depth First Search algorithm to explore the world.
-	 * @return Action
-	 */
 	private Action exploreWorld() {
 		int[] targetNode = nodesToExplore.peek();
-		if (!Arrays.equals(targetNode, new int[]{state.agent_x_position, state.agent_y_position})) { //checks if we are at the targetnode.
-		    return goToTargetNode(targetNode);
-		} 
-		//at the targetnode. Add surrounding nodes to the stack of nodes to explore.
+		if (!Arrays.equals(targetNode, new int[]{state.agent_x_position, state.agent_y_position})) {
+		    return goToTargetNode(targetNode, node_parents_list);
+		}
 		nodesToExplore.pop();
-		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position); // Add eastnode
-		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1); // Add southnode
-		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);	// Add northnode
-		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position - 1, state.agent_y_position); // Add westnode
-		if (!nodesToExplore.empty()) {
-			return goToTargetNode(nodesToExplore.peek());
+		System.out.println("after target node removal");
+		if (!nodesToExplore.contains(new int[]{state.agent_x_position, state.agent_y_position - 1}) &&
+		    state.world[state.agent_x_position][state.agent_y_position - 1] == state.UNKNOWN ||
+		    state.world[state.agent_x_position][state.agent_y_position - 1] == state.HOME) { // Add northnode
+			addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);
 		}
-		else {
-			return NoOpAction.NO_OP;
+		if (!nodesToExplore.contains(new int[]{state.agent_x_position + 1, state.agent_y_position}) &&
+					    state.world[state.agent_x_position + 1][state.agent_y_position] == state.UNKNOWN ||
+		    state.world[state.agent_x_position + 1][state.agent_y_position] == state.HOME) { // Add eastnode
+			addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position);
 		}
+		if (!nodesToExplore.contains(new int[]{state.agent_x_position, state.agent_y_position + 1}) &&
+					    state.world[state.agent_x_position][state.agent_y_position + 1] == state.UNKNOWN ||
+		    state.world[state.agent_x_position][state.agent_y_position + 1] == state.HOME) { // Add southnode
+			addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1);
+		}
+		if (!nodesToExplore.contains(new int[]{state.agent_x_position - 1, state.agent_y_position}) &&
+					    state.world[state.agent_x_position - 1][state.agent_y_position] == state.UNKNOWN ||
+		    state.world[state.agent_x_position - 1][state.agent_y_position] == state.HOME) { // Add westnode
+			addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position - 1, state.agent_y_position);
+		}
+		return goToTargetNode(nodesToExplore.peek(), node_parents_list);
 	}
 	
-	/**
-	 * If nodes are unexplored, this function adds them to the stack of nodes to explore unless they are already in the stack.
-	 * @param currentNode
-	 * @param x, x-coord of node to explore
-	 * @param y, y-coord of node to explore
-	 */
-	private void addUnexploredNeighbourToNodesToExplore(int[] currentNode, int x, int y) {
+	private void addUnexploredNeighbourToNodesToExplore(int[] parentNode, int x, int y) {
+		System.out.println("added node x:" + x + ", y: " + y);
 		int[] nodeToVisit = {x, y};
-		if (!nodesToExplore.contains(nodeToVisit) && state.world[x][y] == state.UNKNOWN || state.world[x][y] == state.HOME) {
-			nodesToExplore.add(nodeToVisit);			
-			List<int[]> parents_nodes = new ArrayList<>(getParentNodes(currentNode));
-			parents_nodes.add(currentNode);
-			node_parents_list.add(new AbstractMap.SimpleEntry<>(nodeToVisit, parents_nodes));
-		}
+		nodesToExplore.add(nodeToVisit);			
+		List<int[]> parents_nodes = new ArrayList<>(getParentNodes(parentNode));
+		parents_nodes.add(parentNode);
+		node_parents_list.add(new AbstractMap.SimpleEntry<>(nodeToVisit, parents_nodes));
 	}
 	
-	/**
-	 * Decides which is next node on path to target.
-	 * @param targetNode
-	 * @return the function, nextAction, which will decide the next action
-	 */
-	private Action goToTargetNode(int[] targetNode) {
+	private Action goToTargetNode(int[] targetNode, List<Entry<int[], List<int[]>>> node_parents_list) {
 		List<int[]> target_node_parents = getParentNodes(targetNode);
 	    	int[] currentNode = {state.agent_x_position, state.agent_y_position};
 		List<int[]> current_node_parents = getParentNodes(currentNode);
 		int[] nextNode;
 	    	boolean subset = checkIfSubset(currentNode, current_node_parents, target_node_parents);
-	    if (checkIfNeighbour(currentNode, targetNode))  { // target is a neighbournode
+	    if (checkIfNeighbour(currentNode, targetNode))  {
+	    	// almost at target
 	    	nextNode = targetNode;
 	    }
-	    /*else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) { 
-	    	System.out.println("goToTargetNode: ssssssssssssssssssssssssssssssssssss");
+	    else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) {
+		    	// follow the targets trail of nodes
 		    	nextNode = target_node_parents.get(current_node_parents.size());
-		}*/ else if (subset && current_node_parents.size() == 0) { // at start-position
+		} else if (subset && current_node_parents.size() == 0) {
+		    	// at start-position
 				    nextNode = target_node_parents.get(1);
-		} else if (subset) { // follow the target's trail of nodes
-			System.out.println("goToTargetNode: subset");
+		} else if (subset) {
 		    nextNode = target_node_parents.get(current_node_parents.size()+1);
 		}
 		else { // going back to start-position
@@ -315,17 +311,10 @@ class MyAgentProgram implements AgentProgram {
 	    return nextAction(nextNode);
 	}
 	
-	/**
-	 * checks if current node is on the path which runs from startnode to targetnode.
-	 * @param currentNode
-	 * @param current_node_parents
-	 * @param target_node_parents
-	 * @return boolean for whether it is a subset or not
-	 */
 	private boolean checkIfSubset(int[] currentNode, List<int[]> current_node_parents, List<int[]> target_node_parents) {
 		boolean subset = false;
     	if (current_node_parents.size() < target_node_parents.size()) {
-		    // check if true subset
+		    // kolla om äkta delmängd
 		    subset = true;
 		    List<int[]> current_nodes = new ArrayList<>(current_node_parents);
 		    current_nodes.add(currentNode);
@@ -339,11 +328,6 @@ class MyAgentProgram implements AgentProgram {
     	return subset;
 	}
 	
-	/**
-	 * Looks for a path of nodes from startnode to a given node.
-	 * @param node
-	 * @return the list which is the path of nodes
-	 */
 	private List<int[]> getParentNodes(int[] node) {
 		List<int[]> result = null;
 		for (int i = 0; i< node_parents_list.size(); i++) {
@@ -355,12 +339,6 @@ class MyAgentProgram implements AgentProgram {
 		return result;
 	} 
 	
-	/**
-	 * Checks if target node is current node's neighbour
-	 * @param currentNode
-	 * @param targetNode
-	 * @return boolean for whether target node is current node's neighbour
-	 */
 	private boolean checkIfNeighbour(int[] currentNode, int[] targetNode) {
 		if (Math.sqrt((double)(Math.pow((targetNode[0] - currentNode[0]), 2) + Math.pow((targetNode[1] - currentNode[1]), 2))) == 1) {
 			return true;
@@ -369,12 +347,6 @@ class MyAgentProgram implements AgentProgram {
 			return false;
 		}
 	}
-	
-	/**
-	 * Decides next action to take given the next node
-	 * @param nextNode
-	 * @return Action to take.
-	 */
 	private Action nextAction(int[] nextNode) {
 		int[] nodeInFront = null;
 		int deltaX = 0;

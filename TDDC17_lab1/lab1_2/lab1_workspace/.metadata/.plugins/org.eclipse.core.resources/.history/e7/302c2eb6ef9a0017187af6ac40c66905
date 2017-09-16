@@ -300,12 +300,12 @@ class MyAgentProgram implements AgentProgram {
 	    if (checkIfNeighbour(currentNode, targetNode))  { // target is a neighbournode
 	    	nextNode = targetNode;
 	    }
-	    /*else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) { 
+	    else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) { // follow the target's trail of nodes
 	    	System.out.println("goToTargetNode: ssssssssssssssssssssssssssssssssssss");
 		    	nextNode = target_node_parents.get(current_node_parents.size());
-		}*/ else if (subset && current_node_parents.size() == 0) { // at start-position
+		} else if (subset && current_node_parents.size() == 0) { // at start-position
 				    nextNode = target_node_parents.get(1);
-		} else if (subset) { // follow the target's trail of nodes
+		} else if (subset) {
 			System.out.println("goToTargetNode: subset");
 		    nextNode = target_node_parents.get(current_node_parents.size()+1);
 		}

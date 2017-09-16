@@ -258,12 +258,12 @@ class MyAgentProgram implements AgentProgram {
 		} 
 		//at the targetnode. Add surrounding nodes to the stack of nodes to explore.
 		nodesToExplore.pop();
+		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);	// Add northnode
 		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position); // Add eastnode
 		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1); // Add southnode
-		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);	// Add northnode
 		addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position - 1, state.agent_y_position); // Add westnode
 		if (!nodesToExplore.empty()) {
-			return goToTargetNode(nodesToExplore.peek());
+			return goToTargetNode(nodesToExplore.peek(), node_parents_list);
 		}
 		else {
 			return NoOpAction.NO_OP;
@@ -300,13 +300,11 @@ class MyAgentProgram implements AgentProgram {
 	    if (checkIfNeighbour(currentNode, targetNode))  { // target is a neighbournode
 	    	nextNode = targetNode;
 	    }
-	    /*else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) { 
-	    	System.out.println("goToTargetNode: ssssssssssssssssssssssssssssssssssss");
+	    else if (subset && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) { // follow the targets trail of nodes
 		    	nextNode = target_node_parents.get(current_node_parents.size());
-		}*/ else if (subset && current_node_parents.size() == 0) { // at start-position
+		} else if (subset && current_node_parents.size() == 0) { // at start-position
 				    nextNode = target_node_parents.get(1);
-		} else if (subset) { // follow the target's trail of nodes
-			System.out.println("goToTargetNode: subset");
+		} else if (subset) {
 		    nextNode = target_node_parents.get(current_node_parents.size()+1);
 		}
 		else { // going back to start-position
@@ -316,11 +314,11 @@ class MyAgentProgram implements AgentProgram {
 	}
 	
 	/**
-	 * checks if current node is on the path which runs from startnode to targetnode.
+	 * 
 	 * @param currentNode
 	 * @param current_node_parents
 	 * @param target_node_parents
-	 * @return boolean for whether it is a subset or not
+	 * @return
 	 */
 	private boolean checkIfSubset(int[] currentNode, List<int[]> current_node_parents, List<int[]> target_node_parents) {
 		boolean subset = false;
@@ -339,11 +337,6 @@ class MyAgentProgram implements AgentProgram {
     	return subset;
 	}
 	
-	/**
-	 * Looks for a path of nodes from startnode to a given node.
-	 * @param node
-	 * @return the list which is the path of nodes
-	 */
 	private List<int[]> getParentNodes(int[] node) {
 		List<int[]> result = null;
 		for (int i = 0; i< node_parents_list.size(); i++) {
@@ -355,12 +348,6 @@ class MyAgentProgram implements AgentProgram {
 		return result;
 	} 
 	
-	/**
-	 * Checks if target node is current node's neighbour
-	 * @param currentNode
-	 * @param targetNode
-	 * @return boolean for whether target node is current node's neighbour
-	 */
 	private boolean checkIfNeighbour(int[] currentNode, int[] targetNode) {
 		if (Math.sqrt((double)(Math.pow((targetNode[0] - currentNode[0]), 2) + Math.pow((targetNode[1] - currentNode[1]), 2))) == 1) {
 			return true;
@@ -369,12 +356,6 @@ class MyAgentProgram implements AgentProgram {
 			return false;
 		}
 	}
-	
-	/**
-	 * Decides next action to take given the next node
-	 * @param nextNode
-	 * @return Action to take.
-	 */
 	private Action nextAction(int[] nextNode) {
 		int[] nodeInFront = null;
 		int deltaX = 0;
