@@ -307,7 +307,7 @@ class MyAgentProgram implements AgentProgram {
 		}
 	    	System.out.println("subset check done");
 	    System.out.println(subSet);
-	    if (checkIfNeighbour(currentNode, targetNode))  {
+	    if (Arrays.equals(target_node_parents.get(target_node_parents.size()-1), currentNode))  {
 	    	// almost at target
 	    	nextNode = targetNode;
 	    System.out.println("next 2");
@@ -329,29 +329,6 @@ class MyAgentProgram implements AgentProgram {
 		    System.out.println("next 5");
 		}
 	    System.out.println("next node: " + nextNode[0] + ", " + nextNode[1]);
-	    return nextAction(nextNode);
-	}
-	
-	private List<int[]> getParentNodes(int[] node) {
-		List<int[]> result = null;
-		for (int i = 0; i< node_parents_list.size(); i++) {
-		    if (Arrays.equals(node_parents_list.get(i).getKey(), node)) {
-			    result = node_parents_list.get(i).getValue();
-				break;
-		    }
-		}
-		return result;
-	} 
-	
-	private boolean checkIfNeighbour(int[] currentNode, int[] targetNode) {
-		if (Math.sqrt((double)(Math.pow((targetNode[0] - currentNode[0]), 2) + Math.pow((targetNode[1] - currentNode[1]), 2))) == 1) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	private Action nextAction(int[] nextNode) {
 		int[] nodeInFront = null;
 		int deltaX = 0;
 		int deltaY = 0;
@@ -376,7 +353,7 @@ class MyAgentProgram implements AgentProgram {
 		
 		if (Arrays.equals(nodeInFront, nextNode)) {
 			return walkForward();
-		} else {
+		}else {
 			nodeInFront = new int[]{state.agent_x_position + deltaY, state.agent_y_position - deltaX};
 			if(Arrays.equals(nodeInFront, nextNode)) {
 				return turnLeft();
@@ -384,8 +361,20 @@ class MyAgentProgram implements AgentProgram {
 			else {
 				return turnRight();				
 			}
+
 		}
 	}
+	
+	private List<int[]> getParentNodes(int[] node) {
+		List<int[]> result = null;
+		for (int i = 0; i< node_parents_list.size(); i++) {
+		    if (Arrays.equals(node_parents_list.get(i).getKey(), node)) {
+			    result = node_parents_list.get(i).getValue();
+				break;
+		    }
+		}
+		return result;
+	} 
 }
 
 public class MyVacuumAgent extends AbstractAgent {

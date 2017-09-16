@@ -6069,3 +6069,12 @@ Caused by: org.eclipse.core.runtime.CoreException: Illegal hierarchy
 	at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
 !SUBENTRY 1 org.eclipse.jdt.ui 4 0 2017-09-14 10:59:47.209
 !MESSAGE Illegal hierarchy
+!SESSION 2017-09-16 13:25:11.943 -----------------------------------------------
+eclipse.buildId=debbuild
+java.version=1.8.0_121
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_GB
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.core.resources 2 10035 2017-09-16 13:25:47.941
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.

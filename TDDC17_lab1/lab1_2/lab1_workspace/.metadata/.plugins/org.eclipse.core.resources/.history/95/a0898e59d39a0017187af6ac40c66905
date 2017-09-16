@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Stack;
 
 class MyAgentState {
 	public int[][] world = new int[30][30];
@@ -106,7 +105,7 @@ class MyAgentProgram implements AgentProgram {
 	// public int iterationCounter = 10;
 	public MyAgentState state = new MyAgentState();
     	private boolean start_up = true;
-	private Stack<int[]> nodesToExplore = new Stack<>();
+	private Queue<int[]> nodesToExplore = new ArrayDeque<>();
 	private List<Entry<int[], List<int[]>>> node_parents_list = new ArrayList<>();
 
 	// moves the Agent to a random start position
@@ -202,7 +201,7 @@ class MyAgentProgram implements AgentProgram {
 		// main rotation loop starts here!
 		// Next action selection based on the percept value
 		if (bump) {
-			nodesToExplore.pop();
+			nodesToExplore.remove();
 		}
 		
 		if (dirt) {
@@ -224,7 +223,7 @@ class MyAgentProgram implements AgentProgram {
 			if (!Arrays.equals(targetNode, new int[]{state.agent_x_position, state.agent_y_position})) {
 			    return goToTargetNode(targetNode, node_parents_list);
 			}
-			nodesToExplore.pop();
+			nodesToExplore.remove();
 			System.out.println("after target node removal");
 			if (!nodesToExplore.contains(new int[]{state.agent_x_position, state.agent_y_position - 1}) &&
 			    state.world[state.agent_x_position][state.agent_y_position - 1] == state.UNKNOWN ||
@@ -307,15 +306,14 @@ class MyAgentProgram implements AgentProgram {
 		}
 	    	System.out.println("subset check done");
 	    System.out.println(subSet);
-	    if (checkIfNeighbour(currentNode, targetNode))  {
-	    	// almost at target
-	    	nextNode = targetNode;
-	    System.out.println("next 2");
-	}
-	    else if (subSet && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) {
+	    	if (subSet && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) {
 		    	// follow the targets trail of nodes
 		    	nextNode = target_node_parents.get(current_node_parents.size());
 		    System.out.println("next 1");
+		} else if (Arrays.equals(target_node_parents.get(target_node_parents.size()-1), currentNode))  {
+		    	// almost at target
+		    	nextNode = targetNode;
+		    System.out.println("next 2");
 		} else if (subSet && current_node_parents.size() == 0) {
 		    	// at start-position
 				    System.out.println("next 3");
@@ -329,7 +327,26 @@ class MyAgentProgram implements AgentProgram {
 		    System.out.println("next 5");
 		}
 	    System.out.println("next node: " + nextNode[0] + ", " + nextNode[1]);
-	    return nextAction(nextNode);
+		int[] nodeInFront = null;
+		switch (state.agent_direction) {
+		    case MyAgentState.NORTH:
+			    nodeInFront = new int[]{state.agent_x_position, state.agent_y_position-1};
+			    break;
+		    case MyAgentState.EAST:
+			    nodeInFront = new int[]{state.agent_x_position+1, state.agent_y_position};
+			    break;
+		    case MyAgentState.SOUTH:
+			    nodeInFront = new int[]{state.agent_x_position, state.agent_y_position+1};
+			    break;
+		    case MyAgentState.WEST:
+			    nodeInFront = new int[]{state.agent_x_position-1, state.agent_y_position};
+			    break;
+		}
+		if (Arrays.equals(nodeInFront, nextNode)) {
+			return walkForward();
+		} else {
+			return turnRight();
+		}
 	}
 	
 	private List<int[]> getParentNodes(int[] node) {
@@ -342,50 +359,6 @@ class MyAgentProgram implements AgentProgram {
 		}
 		return result;
 	} 
-	
-	private boolean checkIfNeighbour(int[] currentNode, int[] targetNode) {
-		if (Math.sqrt((double)(Math.pow((targetNode[0] - currentNode[0]), 2) + Math.pow((targetNode[1] - currentNode[1]), 2))) == 1) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	private Action nextAction(int[] nextNode) {
-		int[] nodeInFront = null;
-		int deltaX = 0;
-		int deltaY = 0;
-		switch (state.agent_direction) {
-		    case MyAgentState.NORTH:
-			    nodeInFront = new int[]{state.agent_x_position, state.agent_y_position-1};
-			    deltaY = -1;
-			    break;
-		    case MyAgentState.EAST:
-			    nodeInFront = new int[]{state.agent_x_position+1, state.agent_y_position};
-			    deltaX = 1;
-			    break;
-		    case MyAgentState.SOUTH:
-			    nodeInFront = new int[]{state.agent_x_position, state.agent_y_position+1};
-			    deltaY = 1;
-			    break;
-		    case MyAgentState.WEST:
-			    nodeInFront = new int[]{state.agent_x_position-1, state.agent_y_position};
-			    deltaX = -1;
-			    break;
-		}
-		
-		if (Arrays.equals(nodeInFront, nextNode)) {
-			return walkForward();
-		} else {
-			nodeInFront = new int[]{state.agent_x_position + deltaY, state.agent_y_position - deltaX};
-			if(Arrays.equals(nodeInFront, nextNode)) {
-				return turnLeft();
-			}
-			else {
-				return turnRight();				
-			}
-		}
-	}
 }
 
 public class MyVacuumAgent extends AbstractAgent {
