@@ -226,19 +226,23 @@ class MyAgentProgram implements AgentProgram {
 			nodesToExplore.remove();
 			System.out.println("after target node removal");
 			if (!nodesToExplore.contains(new int[]{state.agent_x_position, state.agent_y_position - 1}) &&
-			    state.world[state.agent_x_position][state.agent_y_position - 1] == state.UNKNOWN) { // Add northnode
+			    state.world[state.agent_x_position][state.agent_y_position - 1] == state.UNKNOWN ||
+			    state.world[state.agent_x_position][state.agent_y_position - 1] == state.HOME) { // Add northnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position - 1);
 			}
 			if (!nodesToExplore.contains(new int[]{state.agent_x_position + 1, state.agent_y_position}) &&
-						    state.world[state.agent_x_position + 1][state.agent_y_position] == state.UNKNOWN) { // Add eastnode
+						    state.world[state.agent_x_position + 1][state.agent_y_position] == state.UNKNOWN ||
+			    state.world[state.agent_x_position + 1][state.agent_y_position] == state.HOME) { // Add eastnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position + 1, state.agent_y_position);
 			}
 			if (!nodesToExplore.contains(new int[]{state.agent_x_position, state.agent_y_position + 1}) &&
-						    state.world[state.agent_x_position][state.agent_y_position + 1] == state.UNKNOWN) { // Add southnode
+						    state.world[state.agent_x_position][state.agent_y_position + 1] == state.UNKNOWN ||
+			    state.world[state.agent_x_position][state.agent_y_position + 1] == state.HOME) { // Add southnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position, state.agent_y_position + 1);
 			}
 			if (!nodesToExplore.contains(new int[]{state.agent_x_position - 1, state.agent_y_position}) &&
-						    state.world[state.agent_x_position - 1][state.agent_y_position] == state.UNKNOWN) { // Add westnode
+						    state.world[state.agent_x_position - 1][state.agent_y_position] == state.UNKNOWN ||
+			    state.world[state.agent_x_position - 1][state.agent_y_position] == state.HOME) { // Add westnode
 				addUnexploredNeighbourToNodesToExplore(targetNode, state.agent_x_position - 1, state.agent_y_position);
 			}
 			System.out.println("after neighbor to queue add");
@@ -291,19 +295,36 @@ class MyAgentProgram implements AgentProgram {
 	    	if (current_node_parents.size() < target_node_parents.size()) {
 		    // kolla om äkta delmängd
 		    subSet = true;
-		    for (int i = 0; i<current_node_parents.size(); i++) {
-			if (!Arrays.equals(current_node_parents.get(i), target_node_parents.get(i))) {
+		    List<int[]> current_nodes = new ArrayList<>(current_node_parents);
+		    current_nodes.add(currentNode);
+		    for (int i = 0; i<current_nodes.size(); i++) {
+			if (!Arrays.equals(current_nodes.get(i), target_node_parents.get(i))) {
 			    subSet = false;
 			    break;
 			}
 		    }
 		}
+	    	System.out.println("subset check done");
+	    System.out.println(subSet);
 	    	if (subSet && !Arrays.equals(currentNode, target_node_parents.get(current_node_parents.size()))) {
+		    	// follow the targets trail of nodes
 		    	nextNode = target_node_parents.get(current_node_parents.size());
-		} else if (Arrays.equals(target_node_parents.get(0), currentNode))  {
+		    System.out.println("next 1");
+		} else if (Arrays.equals(target_node_parents.get(target_node_parents.size()-1), currentNode))  {
+		    	// almost at target
 		    	nextNode = targetNode;
-		} else {
+		    System.out.println("next 2");
+		} else if (subSet && current_node_parents.size() == 0) {
+		    	// at start-position
+				    System.out.println("next 3");
+				    nextNode = target_node_parents.get(1);
+		} else if (subSet) {
+		    nextNode = target_node_parents.get(current_node_parents.size()+1);
+		    System.out.println("next 4");
+		}
+		else { // going back to start-position
 		    	nextNode = current_node_parents.get(current_node_parents.size()-1);
+		    System.out.println("next 5");
 		}
 	    System.out.println("next node: " + nextNode[0] + ", " + nextNode[1]);
 		int[] nodeInFront = null;
