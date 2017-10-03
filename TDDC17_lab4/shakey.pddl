@@ -23,16 +23,19 @@
 		(small-object ?o) ; o: object
 		(carry ?o ?g) ; o:object, g: gripper
 		(box ?b) ; b: box
-		(light-switch ?l) ; l: light-switch
-		(door-between ?ra ?rb) ; ra: room-a, rb: room-b
+		(lightswitch ?l) ; l: light-switch
+		(door-between ?d ?ra ?rb) ; d: door, ra: room-a, rb: room-b
+		(lightswitch-on ?s) ; s: switch
+
+
 		(shakey-on-box ?b)
 		(box-below-switch ?b ?s) ; b: box, s: switch
 		
    )
    
    (:action move
-       :parameters  (?from ?to)
-       :precondition (and  (room ?from) (room ?to) (at-shakey ?from))
+       :parameters  (?from ?to ?door)
+       :precondition (and  (room ?from) (room ?to) (door ?door) (door-between ?door ?from ?to) (at-shakey ?from))
        :effect (and  (at-shakey ?to)
 		     (not (at-shakey ?from))))
 
@@ -50,24 +53,22 @@
 			    (carry ?obj ?gripper) (at-shakey ?room))
        :effect (and (at ?obj ?room)
 		    (free ?gripper)
-		    (not (carry ?obj ?gripper)))))
+		    (not (carry ?obj ?gripper))))
 
    (:action push
-       :parameters (?from ?to ?box)
-       :precondition (and (box ?box) (at ?box ?from) (room ?from) (room ?to) (at-shakey ?from)
+       :parameters (?from ?to ?box ?door)
+       :precondition (and (box ?box) (at ?box ?from) (room ?from) (room ?to)
+			  (at-shakey ?from) (door ?door) (wide ?door) (door-between ?door ?from ?to)
 		     )
-       :effect(and (at-shakey ?to) (at ?box ?to) )
+       :effect(and (at-shakey ?to) (at ?box ?to) (not(at-shakey ?from)) (not(at ?box ?from)))
    )
 		      
-   (:action switch-light
+   (:action turn_light_on
        :parameters (?room ?box ?switch)
-       :precondition (and (box ?box) (at ?box ?room) (room ?from) (at-shakey ?from) (shake-on-box ?box)
+       :precondition (and (box ?box) (at ?box ?room) (room ?room) (at-shakey ?room)
+			  (lightswitch ?switch) (at ?switch ?room)
+			  (not (lightswitch-on ?switch))
 		     )
-       :effect()
+       :effect(lightswitch-on ?switch)
    )
-   
-   (:action climb-box
-       :parameters (?from ?to ?box)
-       :precondition ()
-       :effect()
-   )
+)
