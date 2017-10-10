@@ -117,7 +117,8 @@ public class QLearningController extends Controller {
 	}
 
 	/* Main decision loop. Called every iteration by the simulator */
-	public void tick(int currentTime) {;
+	public void tick(int currentTime) {
+		performAction(5);
 		iteration++;
 		
 		if (!paused) {
@@ -146,10 +147,7 @@ public class QLearningController extends Controller {
 				if (Qtable.get(prev_stateaction) == null) {
 					Qtable.put(prev_stateaction, 0.0);
 				} 
-				
-				Qtable.put(prev_stateaction, Qtable.get(prev_stateaction) + 1);
-				
-				Qtable.
+
 				
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
 				

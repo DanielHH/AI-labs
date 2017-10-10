@@ -84,40 +84,16 @@ public class QLearningController extends Controller {
 
 	/* Performs the chosen action */
 	void performAction(int action) {
-		/* TODO: Remember to change NUM_ACTIONS constant to reflect 
-		   the number of actions (including 0, no action) */
-		resetRockets();
-		switch (action) {
-			case 0: // Go forward
-				middleEngine.setBursting(true);
-				break;
-			case 1: // Turn left
-				rightEngine.setBursting(true);
-				break;
-			case 2: // Turn right
-				leftEngine.setBursting(true);
-				break;
-			case 3: // Powerturn left
-				rightEngine.setBursting(true);
-				middleEngine.setBursting(true);
-				break;
-			case 4: // Powerturn right
-				leftEngine.setBursting(true);
-				middleEngine.setBursting(true);
-				break;
-			case 5: // Superburst forward
-				leftEngine.setBursting(true);
-				middleEngine.setBursting(true);
-				rightEngine.setBursting(true);
-				break;
-			case 6: // do no action
-			default:
-				break;
-		}
+
+		/* Fire zeh rockets! */
+		/* TODO: Remember to change NUM_ACTIONS constant to reflect the number of actions (including 0, no action) */
+		
+		/* TODO: IMPLEMENT THIS FUNCTION */
+		
 	}
 
 	/* Main decision loop. Called every iteration by the simulator */
-	public void tick(int currentTime) {;
+	public void tick(int currentTime) {
 		iteration++;
 		
 		if (!paused) {
@@ -146,10 +122,7 @@ public class QLearningController extends Controller {
 				if (Qtable.get(prev_stateaction) == null) {
 					Qtable.put(prev_stateaction, 0.0);
 				} 
-				
-				Qtable.put(prev_stateaction, Qtable.get(prev_stateaction) + 1);
-				
-				Qtable.
+
 				
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
 				

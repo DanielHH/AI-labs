@@ -6,7 +6,7 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
 		String state = "AngleUnknown";
-		if (angle < 0.05 & angle > -0.05) {
+		if (angle == 0) {
 			// Straight up
 			state = "AnglePointingUp";
 		}
@@ -53,9 +53,9 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 			
 		double reward = 0;
-		if (angle < 0.05 & angle > -0.05) {
+		if (angle == 0) {
 			// Straight up
-			reward = 1;
+			reward = 5;
 		}
 		else if (angle > 0 & angle < Math.PI/2) {
 			// First quadrant

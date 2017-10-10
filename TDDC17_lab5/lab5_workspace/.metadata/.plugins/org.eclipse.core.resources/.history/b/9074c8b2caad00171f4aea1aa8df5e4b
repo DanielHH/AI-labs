@@ -3,76 +3,23 @@ public class StateAndReward {
 	
 	/* State discretization function for the angle controller */
 	public static String getStateAngle(double angle, double vx, double vy) {
+
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
-		String state = "AngleUnknown";
-		if (angle < 0.05 & angle > -0.05) {
-			// Straight up
-			state = "AnglePointingUp";
-		}
-		else if (angle > 0 & angle < Math.PI/2) {
-			// First quadrant
-			state = "AngleFirst";
-		}
-		else if (angle < 0 & angle >= -Math.PI/2) {
-			// Second quadrant
-			state = "AngleSecond";
-		}
-		else if (angle < -Math.PI/2 & angle >= -Math.PI) {
-			// Third quadrant
-			state = "AngleThird";
-		}
-		else if (angle >= Math.PI/2 & angle <= Math.PI) {
-			// Fourth quadrant
-			state = "AngleFourth";
-		}
+		String state = "OneStateToRuleThemAll";
+		
+		
+		
 		return state;
-		
-		/*
-		 * Use later.
-		// First quadrant (unit circle)
-		if (vx >= 0 & vy <= 0) {
-			// velocity vector in first quadrant
-		}
-		else if (vx < 0 & vy <= 0) {
-			// velocity vector in second quadrant
-		}
-		else if (vx <= 0 & vy > 0) {
-			// velocity vector in third quadrant
-		}
-		else if (vx > 0 & vy > 0) {
-			// velocity vector in fourth quadrant
-		}
-		*/
-		
 	}
 
 	/* Reward function for the angle controller */
 	public static double getRewardAngle(double angle, double vx, double vy) {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
-			
+		
 		double reward = 0;
-		if (angle < 0.05 & angle > -0.05) {
-			// Straight up
-			reward = 1;
-		}
-		else if (angle > 0 & angle < Math.PI/2) {
-			// First quadrant
-			reward = 0;
-		}
-		else if (angle < 0 & angle >= -Math.PI/2) {
-			// Second quadrant
-			reward = 0;
-		}
-		else if (angle < -Math.PI/2 & angle >= -Math.PI) {
-			// Third quadrant
-			reward = -1;
-		}
-		else if (angle >= Math.PI/2 & angle <= Math.PI) {
-			// Fourth quadrant
-			reward = -1;
-		}
+
 		return reward;
 	}
 

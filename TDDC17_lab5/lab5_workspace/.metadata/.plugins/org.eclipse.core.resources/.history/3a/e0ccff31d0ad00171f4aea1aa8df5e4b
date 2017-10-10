@@ -55,7 +55,7 @@ public class StateAndReward {
 		double reward = 0;
 		if (angle < 0.05 & angle > -0.05) {
 			// Straight up
-			reward = 1;
+			reward = 3;
 		}
 		else if (angle > 0 & angle < Math.PI/2) {
 			// First quadrant
