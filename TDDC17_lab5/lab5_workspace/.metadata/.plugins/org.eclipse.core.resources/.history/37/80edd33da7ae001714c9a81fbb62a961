@@ -146,24 +146,24 @@ public class StateAndReward {
 		
 		if (angle < 0.05 && angle > -0.05) {
 			// Straight up
-			reward += 15;
+			reward += 5;
 			reward += velocityReward(vx, vy);
 		}
 		else if (angle > 0 && angle < Math.PI/4 || angle < 0 && angle >= -Math.PI/4) {
 			// Up
-			reward += 10;
+			reward += 2;
 			reward += velocityReward(vx, vy);
 
 		}
 		else if (angle > 0 && angle < Math.PI/2 || angle < 0 && angle >= -Math.PI/2) {
 			// Up
-			reward += 5;
+			reward += 0;
 			reward += velocityReward(vx, vy);
 
 		}
 		else if (angle < -Math.PI/2 && angle >= -Math.PI || angle >= Math.PI/2 && angle <= Math.PI) {
 			// Down
-			reward += 0;
+			reward += -1;
 			reward += velocityReward(vx, vy);
 		}
 		return reward;
@@ -172,7 +172,7 @@ public class StateAndReward {
 	public static double velocityReward(double vx, double vy) {
 		double reward = 0;
 		if (Math.abs(vy) < 0.4) {
-			reward += 8;
+			reward += 5;
 			if (Math.abs(vx) < 0.7) {
 				reward += 3;
 			}
@@ -185,7 +185,7 @@ public class StateAndReward {
 			
 		}
 		else if (Math.abs(vy) < 0.9) {
-			reward += 6;
+			reward += 3;
 			if (Math.abs(vx) < 0.7) {
 				reward += 3;
 			}
@@ -197,7 +197,7 @@ public class StateAndReward {
 			}
 		}
 		else if (Math.abs(vy) < 2.0) {
-			reward += 4;
+			reward += 1;
 			if (Math.abs(vx) < 0.7) {
 				reward += 3;
 			}
