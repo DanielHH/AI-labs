@@ -147,7 +147,7 @@ public class QLearningController extends Controller {
 					Qtable.put(prev_stateaction, 0.0);
 				} 
 				
-				Qtable.put(prev_stateaction, Qtable.get(prev_stateaction) + alpha(Ntable.get(prev_stateaction)) * (previous_reward + getMaxActionQValue(new_state) - Qtable.get(prev_stateaction)));
+				Qtable.put(prev_stateaction, alpha(Ntable.get(prev_stateaction)) * (previous_reward + getMaxActionQValue(new_state) - Qtable.get(prev_stateaction)));
 				
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
 				
