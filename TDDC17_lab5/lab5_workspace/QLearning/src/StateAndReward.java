@@ -60,66 +60,92 @@ public class StateAndReward {
 		String vely = "VyUnknown";
 		String velx = "VxUnknown";
 		
-	
-		if (angle < 0.05 && angle > -0.05) {
-			// Straight up
-			vely = getVy(vy);
-			velx = getVx(vx);
+		if (Math.abs(angle) < 0.05) {
+			// Straight up		
 			state = "AngleStraightUp";
+		} else {
+			switch (discretize2(Math.abs(angle), 9, 0, Math.PI)) {
+				case 0:
+					state = "angleTop20";
+					break;
+				case 1:
+					state = "angleTop30";
+					break;
+				case 2:
+					state = "angleTop40";
+					break;	
+				case 3:
+					state = "angleTop50";
+					break;
+				case 4:
+					state = "angleTop60";
+					break;	
+				case 5:
+					state = "angleTop70";
+					break;
+				case 6:
+					state = "angleTop80";
+					break;	
+				case 7:
+					state = "angleTop90";
+					break;
+				case 8:
+				default:
+					state = "angleTop130";
+					break;
+			}		
 		}
-		else if (angle > 0 && angle < Math.PI/4 || angle < 0 && angle >= -Math.PI/4) {
-			// First quadrant
-			vely = getVy(vy);
-			velx = getVx(vx);
-			state = "AngleUp";
+		vely = getVy(vy);
+		//velx = getVx(vx);
+		String turned = "left";
+		if (angle >= 0) {
+			turned = "right";
 		}
-		else if (angle > 0 && angle < Math.PI/2 || angle < 0 && angle >= -Math.PI/2) {
-			// First quadrant
-			vely = getVy(vy);
-			velx = getVx(vx);
-			state = "AngleSide";
-		}
-		else if (angle < -Math.PI/2 && angle >= -Math.PI || angle >= Math.PI/2 && angle <= Math.PI) {
-			// Third quadrant
-			vely = getVy(vy);
-			velx = getVx(vx);
-			state = "AngleDown";
-		}
-		return state + vely + velx;
+		return state + turned + vely;
 
 	}
 	
-	/*public static String getVelocity(double vx, double vy) {
-		String result = "no result";
-		
-		if (Math.abs(vx) < 0.7 && Math.abs(vy) < 0.4) {
-			result = "VelocityHover";
-		}
-		else if (Math.abs(vx) < 2.0 && Math.abs(vy) < 1.0 ) {
-			result = "VelocityNear";
-		}
-		else {
-			result = "Velocity2High";
-		}
-		return result;
-	}*/
-	
 	public static String getVy(double vy) {
 		String result = "no vy";
-		
-		if (Math.abs(vy) < 0.4) {
+		if (Math.abs(vy) < 0.15) {
 			result = "VyHover";			
+		} else {
+			switch (discretize2(Math.abs(vy), 10, 0, 15)) {
+				case 0:
+					result = "Vy1";
+					break;
+				case 1:
+					result = "Vy2";
+					break;
+				case 2:
+					result = "Vy3";
+					break;
+				case 4:
+					result = "Vy4";
+					break;
+				case 5:
+					result = "Vy5";
+					break;
+				case 6:
+					result = "Vy6";
+					break;
+				case 7:
+					result = "Vy7";
+					break;
+				case 8:
+					result = "Vy8";
+					break;
+				case 9:
+				default:
+					result = "Vy9";
+					break;
+			}
+		}		
+		String dir = "down";
+		if (vy <= 0) {
+			dir = "up";
 		}
-		else if (Math.abs(vy) < 0.9) {
-			result = "VyNear";
-		}
-		else if (Math.abs(vy) < 2.0) {
-			result = "Vy2High";
-		}
-		else {
-			result = "VyInfinite";
-		}
-		return result;
+		return result + dir;
 	}
 	
 	public static String getVx(double vx) {
@@ -143,85 +169,99 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 		
 		double reward = 0;
-		
-		if (angle < 0.05 && angle > -0.05) {
-			// Straight up
-			reward += 15;
-			reward += velocityReward(vx, vy);
+		if (Math.abs(angle) < 0.05) {
+			// Straight up		
+			reward += 20;
+		} else {
+			switch (discretize2(Math.abs(angle), 9, 0, Math.PI)) {
+				case 0:
+					reward += 10;
+					break;
+				case 1:
+					reward += 5;
+					break;
+				case 2:
+					reward += 1;
+					break;	
+				case 3:
+					reward += 0;
+					break;
+				case 4:
+					reward += 0;
+					break;
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				default:
+					reward += -1;
+					break;
+			}		
 		}
-		else if (angle > 0 && angle < Math.PI/4 || angle < 0 && angle >= -Math.PI/4) {
-			// Up
-			reward += 10;
-			reward += velocityReward(vx, vy);
-
-		}
-		else if (angle > 0 && angle < Math.PI/2 || angle < 0 && angle >= -Math.PI/2) {
-			// Up
-			reward += 5;
-			reward += velocityReward(vx, vy);
-
-		}
-		else if (angle < -Math.PI/2 && angle >= -Math.PI || angle >= Math.PI/2 && angle <= Math.PI) {
-			// Down
-			reward += 0;
-			reward += velocityReward(vx, vy);
+		reward += vyReward(vy);
+		//reward += vxReward(vx);
+		return reward;
+	}
+	
+	public static double vyReward(double vy) {
+		double reward = 0;
+		if (Math.abs(vy) < 0.15) {
+			reward += 10;			
+		} else {
+			switch (discretize2(Math.abs(vy), 10, 0, 15)) {
+				case 0:
+					reward += 3;
+					break;
+				case 1:
+					reward += 2;
+					break;
+				case 2:
+					reward += 1;
+					break;
+				case 3:
+					reward += 0;
+					break;
+				case 4:
+					reward += 0;
+					break;
+				case 5:
+					reward += 0;
+					break;
+				case 6:
+					reward += 0;
+					break;
+				case 7:
+					reward += 0;
+					break;
+				case 8:
+					reward += 0;
+					break;
+				case 9:
+				default:
+					reward += 0;
+					break;
+			}
 		}
 		return reward;
 	}
 	
-	public static double velocityReward(double vx, double vy) {
+	public static double vxReward(double vx) {
+		
 		double reward = 0;
-		if (Math.abs(vy) < 0.4) {
-			reward += 8;
-			if (Math.abs(vx) < 0.7) {
-				reward += 3;
-			}
-			else if (Math.abs(vx) < 2) {
-				reward += 1;
-			}
-			else {
-				reward += 0;
-			}
-			
+		if (Math.abs(vx) < 0.7) {
+			reward += 2;
 		}
-		else if (Math.abs(vy) < 0.9) {
-			reward += 6;
-			if (Math.abs(vx) < 0.7) {
-				reward += 3;
-			}
-			else if (Math.abs(vx) < 2) {
-				reward += 1;
-			}
-			else {
-				reward += 0;
-			}
-		}
-		else if (Math.abs(vy) < 2.0) {
-			reward += 4;
-			if (Math.abs(vx) < 0.7) {
-				reward += 3;
-			}
-			else if (Math.abs(vx) < 2) {
-				reward += 1;
-			}
-			else {
-				reward += 0;
-			}
+		else if (Math.abs(vx) < 2) {
+			reward += 1;
 		}
 		else {
 			reward += 0;
-			if (Math.abs(vx) < 0.7) {
-				reward += 3;
-			}
-			else if (Math.abs(vx) < 2) {
-				reward += 1;
-			}
-			else {
-				reward += 0;
-			}
 		}
+		
 		return reward;
 	}
+	
+	
 	/*
 	// First quadrant (unit circle)
 if (vx >= 0 & vy <= 0) {

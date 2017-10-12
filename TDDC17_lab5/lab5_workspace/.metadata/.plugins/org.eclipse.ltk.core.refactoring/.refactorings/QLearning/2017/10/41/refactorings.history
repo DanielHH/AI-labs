@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;StateAndReward.velocityReward(...)&apos; to &apos;vyReward&apos;&#x0A;- Original project: &apos;QLearning&apos;&#x0A;- Original element: &apos;StateAndReward.velocityReward(...)&apos;&#x0A;- Renamed element: &apos;StateAndReward.vyReward(...)&apos;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;velocityReward&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;{StateAndReward.java[StateAndReward~velocityReward~D~D" name="vyReward" references="true" stamp="1507790160101" version="1.0"/>
+</session>
