@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="24" version="2.0">
+<workbench progressCount="23" version="2.0">
 <workbenchAdvisor/>
-<window height="1053" width="954" x="960" y="0">
+<window height="1055" width="960" x="960" y="0">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -38,13 +38,13 @@
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="QLearningController.java" partName="QLearningController.java" path="/home/danhe178/TDDC17/TDDC17_lab5/lab5_workspace/QLearning/src/QLearningController.java" title="QLearningController.java" tooltip="QLearning/src/QLearningController.java" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="QLearningController.java" partName="QLearningController.java" path="/home/danhe178/TDDC17/TDDC17_lab5/lab5_workspace/QLearning/src/QLearningController.java" title="QLearningController.java" tooltip="QLearning/src/QLearningController.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/QLearning/src/QLearningController.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5335" selectionTopPixel="2210"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6419" selectionTopPixel="1572"/>
 </editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StateAndReward.java" partName="StateAndReward.java" path="/home/danhe178/TDDC17/TDDC17_lab5/lab5_workspace/QLearning/src/StateAndReward.java" title="StateAndReward.java" tooltip="QLearning/src/StateAndReward.java" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StateAndReward.java" partName="StateAndReward.java" path="/home/danhe178/TDDC17/TDDC17_lab5/lab5_workspace/QLearning/src/StateAndReward.java" title="StateAndReward.java" tooltip="QLearning/src/StateAndReward.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/QLearning/src/StateAndReward.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="27" selectionOffset="1362" selectionTopPixel="2089"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2598" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TutorialController.java" partName="TutorialController.java" path="/home/danhe178/TDDC17/TDDC17_lab5/lab5_workspace/QLearning/src/TutorialController.java" title="TutorialController.java" tooltip="QLearning/src/TutorialController.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/QLearning/src/TutorialController.java"/>
@@ -119,7 +119,7 @@
 <fastViewBar fastViewLocation="1024" id="bottomRight" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
 <fastViews>
 <view id="org.eclipse.ui.views.TaskList" ratio="0.3"/>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.3"/>
+<view id="org.eclipse.ui.console.ConsoleView" ratio="0.1583514"/>
 </fastViews>
 </fastViewBar>
 </fastViewBars>
@@ -146,9 +146,9 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info part="org.eclipse.gef.ui.palette_view" ratio="0.114528105" ratioLeft="108" ratioRight="835" relationship="2" relative="topLeft"/>
+<info part="org.eclipse.gef.ui.palette_view" ratio="0.21633086" ratioLeft="204" ratioRight="739" relationship="2" relative="topLeft"/>
 <info folder="true" part="bottomRight" ratio="0.65891474" ratioLeft="425" ratioRight="220" relationship="4" relative="org.eclipse.gef.ui.palette_view">
-<folder appearance="2" expanded="0">
+<folder appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.TaskList" label="LabelNotFound"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
 <page content="org.eclipse.team.ui.GenericHistoryView" label="LabelNotFound"/>
@@ -186,6 +186,7 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/QLearning/src/QLearningController.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/QLearning/src/StateAndReward.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/QLearning/src/QLearningController.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/QLearning/src/StateAndReward.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/QLearning/src/StateAndReward.java"/>
 </editors>
 <item historyLabel="QLearningController.java" index="0">
@@ -278,8 +279,23 @@
 <item historyLabel="StateAndReward.java" index="6">
 <position info="not_deleted" x="1362" y="27"/>
 </item>
-<item active="true" historyLabel="QLearningController.java" index="5">
+<item historyLabel="QLearningController.java" index="5">
 <position info="not_deleted" x="4089" y="0"/>
+</item>
+<item historyLabel="StateAndReward.java" index="7">
+<position info="not_deleted" x="4441" y="0"/>
+</item>
+<item historyLabel="QLearningController.java" index="5">
+<position info="not_deleted" x="6376" y="116"/>
+</item>
+<item historyLabel="StateAndReward.java" index="7">
+<position info="not_deleted" x="2598" y="0"/>
+</item>
+<item historyLabel="QLearningController.java" index="5">
+<position info="not_deleted" x="6419" y="0"/>
+</item>
+<item active="true" historyLabel="StateAndReward.java" index="7">
+<position info="not_deleted" x="2598" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -287,12 +303,6 @@
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
-<trimArea IMemento.internal.id="16384">
-<trimItem IMemento.internal.id="topLeft"/>
-</trimArea>
-<trimArea IMemento.internal.id="131072">
-<trimItem IMemento.internal.id="org.eclipse.ui.editorss"/>
-</trimArea>
 <trimArea IMemento.internal.id="128">
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
 </trimArea>
@@ -300,7 +310,6 @@
 <trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
-<trimItem IMemento.internal.id="bottomLeft"/>
 <trimItem IMemento.internal.id="bottomRight"/>
 </trimArea>
 </trimLayout>
